@@ -1,4 +1,4 @@
-# Trading AI Backend
+# RealTime-Finance
 
 This project provides a **Flask-based backend** for real-time trading insights using:
 - [Pathway](https://pathway.com) for streaming data pipelines
@@ -14,5 +14,6 @@ This project provides a **Flask-based backend** for real-time trading insights u
 - Analyzes financial news for sentiment
 - Generates trading insights using AI
 - Provides REST APIs for frontend integration
+
 
 
