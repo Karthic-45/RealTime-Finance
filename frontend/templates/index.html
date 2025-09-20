@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>🚀 Trading AI Hackathon Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f0f1d;
+            color: #eee;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(90deg, #0d6efd, #6610f2);
+            padding: 25px;
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 20px #6610f2;
+            }
+
+            100% {
+                box-shadow: 0 0 40px #0d6efd;
+            }
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            flex: 1;
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Card */
+        .card {
+            background: #1a1a2e;
+            border-radius: 20px;
+            flex: 1 1 400px;
+            padding: 25px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            animation: fadeInUp 1s forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 22px;
+            background: linear-gradient(45deg, #0d6efd, #6610f2, #0d6efd);
+            z-index: -1;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.5s;
+        }
+
+        .card:hover::before {
+            transform: scale(1.05);
+            opacity: 1;
+            box-shadow: 0 0 20px #6610f2;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            font-size: 1.6em;
+            border-bottom: 2px solid #333;
+            padding-bottom: 8px;
+        }
+
+        /* Chart containers */
+        .chart-container {
+            height: 300px;
+            width: 100%;
+        }
+
+        /* News & Insights */
+        .news-feed,
+        .insights-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .news-item,
+        .insight-item {
+            background: #2a2a4d;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            transition: 0.3s;
+            animation: fadeInUp 0.5s forwards;
+            opacity: 0;
+        }
+
+        .news-item:hover,
+        .insight-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.7);
+        }
+
+        .positive {
+            color: #3ad38c;
+            font-weight: bold;
+        }
+
+        .negative {
+            color: #ff5252;
+            font-weight: bold;
+        }
+
+        .neutral {
+            color: #ffeb3b;
+            font-weight: bold;
+        }
+
+        /* Trending */
+        .trending-topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .topic-tag {
+            background: rgba(127, 0, 255, 0.2);
+            border: 1px solid #7f00ff;
+            color: #b388ff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: 0.3s;
+        }
+
+        .topic-tag:hover {
+            background: rgba(127, 0, 255, 0.5);
+            transform: scale(1.05);
+            cursor: pointer;
+            box-shadow: 0 0 10px #7f00ff;
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777;
+        }
+    </style>
+</head>
+
+<body>
+    <header>🚀 Trading AI Hackathon Dashboard</header>
+
+    <div class="container">
+        <!-- Stock Bar Chart -->
+        <div class="card" style="animation-delay:0s;">
+            <h2>Live Stock Trends</h2>
+            <div class="chart-container">
+                <canvas id="stocksChart"></canvas>
+            </div>
+        </div>
+
+        <!-- News Feed -->
+        <div class="card news-feed" style="animation-delay:0.1s;">
+            <h2>Latest News</h2>
+            <div id="news"></div>
+        </div>
+
+        <!-- AI Insights -->
+        <div class="card insights-feed" style="animation-delay:0.2s;">
+            <h2>AI Insights</h2>
+            <div id="insights"></div>
+        </div>
+
+        <!-- Sentiment Pie -->
+        <div class="card" style="animation-delay:0.3s;">
+            <h2>Sentiment Analysis</h2>
+            <div class="chart-container">
+                <canvas id="sentimentChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Trending Topics -->
+        <div class="card" style="animation-delay:0.4s;">
+            <h2>Trending Topics</h2>
+            <div id="trending-topics" class="trending-topics"></div>
+        </div>
+    </div>
+
+    <script>
+        let stockChart, sentimentChart;
+        const API_BASE = "http://localhost:8000";
+
+        async function fetchData() {
+            try {
+                const [stocksRes, newsRes, insightsRes] = await Promise.all([
+                    fetch(`${API_BASE}/api/stocks`),
+                    fetch(`${API_BASE}/api/news`),
+                    fetch(`${API_BASE}/api/insights`)
+                ]);
+                const stocks = await stocksRes.json();
+                const news = await newsRes.json();
+                const insights = await insightsRes.json();
+
+                updateStocksChart(stocks);
+                updateNewsFeed(news);
+                updateInsightsFeed(insights);
+                updateSentimentChart(news);
+                updateTrendingTopics(news);
+            } catch (err) { console.error(err); }
+        }
+
+        // Stock Bar Chart
+        function updateStocksChart(stocks) {
+            const labels = stocks.map(s => s.symbol);
+            const prices = stocks.map(s => s.price);
+            const colors = stocks.map(s => s.change >= 0 ? '#3ad38c' : '#ff5252');
+            if (stockChart) {
+                stockChart.data.labels = labels;
+                stockChart.data.datasets[0].data = prices;
+                stockChart.data.datasets[0].backgroundColor = colors;
+                stockChart.update();
+            } else {
+                const ctx = document.getElementById('stocksChart').getContext('2d');
+                stockChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Price ($)',
+                            data: prices,
+                            backgroundColor: colors,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: { duration: 1000, easing: 'easeOutQuart' },
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: false, grid: { color: '#333' } }, x: { grid: { color: '#333' } } }
+                    }
+                });
+            }
+        }
+
+        // News Feed
+        function updateNewsFeed(news) {
+            const newsDiv = document.getElementById('news'); newsDiv.innerHTML = '';
+            news.forEach((article, index) => {
+                const sentimentClass = article.sentiment || 'neutral';
+                const div = document.createElement('div');
+                div.className = 'news-item'; div.style.animationDelay = `${index * 0.1}s`;
+                div.innerHTML = `<strong>${article.title}</strong> <span class="${sentimentClass}">[${article.sentiment || 'neutral'}]</span>
+    <div>${article.source} - ${new Date(article.publishedAt).toLocaleTimeString()}</div>
+    <div style="font-size:0.9em;margin-top:5px;">${article.description || ''}</div>`;
+                newsDiv.appendChild(div);
+            });
+        }
+
+        // AI Insights
+        function updateInsightsFeed(insights) {
+            const insightsDiv = document.getElementById('insights'); insightsDiv.innerHTML = '';
+            insights.forEach((insight, index) => {
+                const div = document.createElement('div'); div.className = 'insight-item'; div.style.animationDelay = `${index * 0.1}s`;
+                div.innerHTML = insight.insight;
+                insightsDiv.appendChild(div);
+            });
+        }
+
+        // Sentiment Pie
+        function updateSentimentChart(news) {
+            const counts = news.reduce((acc, a) => { const s = a.sentiment || 'neutral'; acc[s] = (acc[s] || 0) + 1; return acc; }, {});
+            const data = { labels: ['Positive', 'Negative', 'Neutral'], datasets: [{ data: [counts.positive || 0, counts.negative || 0, counts.neutral || 0], backgroundColor: ['#3ad38c', '#ff5252', '#ffeb3b'], hoverOffset: 15 }] };
+            if (sentimentChart) { sentimentChart.data = data; sentimentChart.update(); }
+            else {
+                const ctx = document.getElementById('sentimentChart').getContext('2d');
+                sentimentChart = new Chart(ctx, { type: 'pie', data: data, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: { color: '#eee' } } } } });
+            }
+        }
+
+        // Trending
+        function updateTrendingTopics(news) {
+            const trending = document.getElementById('trending-topics'); trending.innerHTML = '';
+            const keywords = ['AI', 'Tech', 'Growth', 'Market', 'Finance', 'Innovation', 'Trade', 'Merger', 'Acquisition'];
+            const found = new Set();
+            news.forEach(article => { const title = article.title.toLowerCase(); keywords.forEach(k => { if (title.includes(k.toLowerCase())) found.add(k); }); });
+            if (found.size === 0) { found.add('AI Innovation'); found.add('Market Shift'); }
+            Array.from(found).forEach((topic, index) => { const span = document.createElement('span'); span.className = 'topic-tag'; span.textContent = topic; span.style.animationDelay = `${0.5 + index * 0.1}s`; trending.appendChild(span); });
+        }
+
+        // Initial fetch
+        fetchData(); setInterval(fetchData, 5000);
+    </script>
+</body>
+
+</html>

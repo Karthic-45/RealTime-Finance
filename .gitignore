@@ -1,0 +1,51 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.Python
+env/
+venv/
+ENV/
+*.log
+
+# --- Virtual environment ---
+.venv/
+venv/
+env/
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Editors ---
+.vscode/
+.idea/
+*.swp
+
+# --- Environment / secrets ---
+.env
+.env.*
+
+# --- Pathway / temp data ---
+.cache/
+checkpoints/
+*.pwstate
+
+# --- Docker ---
+*.pid
+*.seed
+docker-compose.override.yml
+
+# --- Build / distribution ---
+dist/
+build/
+*.egg
+*.whl
+
+# --- Node / frontend (if using React/Vue/etc.) ---
+frontend/node_modules/
+frontend/build/
+frontend/dist/

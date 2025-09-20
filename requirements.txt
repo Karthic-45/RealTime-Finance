@@ -1,0 +1,8 @@
+Flask
+flask-cors
+requests
+openai
+pathway
+textblob
+yfinance
+python-dotenv
