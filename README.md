@@ -15,16 +15,4 @@ This project provides a **Flask-based backend** for real-time trading insights u
 - Generates trading insights using AI
 - Provides REST APIs for frontend integration
 
----
 
-## 🛠️ Project Structure
-trading_ai/
-│── backend/
-│ ├── app.py # Flask entrypoint
-│ ├── pathways_pipeline.py # Pathway data pipeline
-│ ├── data_fetchers/ # Stock & news APIs
-│ ├── config.py # Config & environment variables
-│── requirements.txt # Python dependencies
-│── Dockerfile # Backend image definition
-│── docker-compose.yml # Multi-service orchestration
-│── .env # Environment variables (not committed)
